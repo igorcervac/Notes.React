@@ -32,11 +32,29 @@ function App() {
     }
   ]);
   
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+
+  const handleSubmit = (e : React.FormEvent) => {
+    e.preventDefault();
+
+    const newNote: Note = {
+      id: notes.length+1,
+      title: title,
+      content: content
+    };
+  
+    setNotes([newNote, ...notes]);
+
+    setTitle("");
+    setContent("");
+  }
+
   return (
     <div className='container'>
-      <form className='note-form'>
-        <input type='text' required placeholder='Title'></input>
-        <textarea placeholder='Content' required rows={3}></textarea>
+      <form className='note-form' onSubmit={e => handleSubmit(e)}>
+        <input type='text' required placeholder='Title' onChange={e => setTitle(e.target.value)} value={title}></input>
+        <textarea placeholder='Content' required rows={3} onChange={e => setContent(e.target.value)} value={content}></textarea>
         <button type='submit'>Add note</button>
       </form>
       <div className='notes-grid'>
