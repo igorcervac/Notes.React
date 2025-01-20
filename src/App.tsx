@@ -1,40 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import { useState } from 'react';
-
-type Note = {
-  id: number,
-  title: string,
-  content:string
-}
+import Note from './Note';
+import notesService from './services/api.notes.service';
 
 function App() {
-  const [notes, setNotes] = useState<Note[]>([
-    {
-      id: 1,
-      title:'title',
-      content:'content'
-    },
-    {
-      id: 2,
-      title:'title 2',
-      content:'content 2'
-    },
-    {
-      id: 3,
-      title:'title 3',
-      content:'content 3'
-    },
-    {
-      id: 4,
-      title:'title 4',
-      content:'content 4'
-    }
-  ]);
+  const [notes, setNotes] = useState<Note[]>([]);
   
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [selectedNote, setSelectedNote] = useState<Note | null>();
+
+  useEffect(() => {
+
+    const getNotesAsync = async () => {
+      const notes = await notesService.getAll();
+      setNotes(notes);
+    }
+
+    getNotesAsync();
+  })
 
   const handleNoteClick = (note : Note) => {
     setSelectedNote(note);
@@ -42,22 +27,24 @@ function App() {
     setContent(note.content);
   }
 
-  const handleAddNote = (e : React.FormEvent) => {
+  const handleAddNote = async (e : React.FormEvent) => {
     e.preventDefault();
 
     const newNote: Note = {
-      id: notes.length+1,
+      id: notes.length + 1,
       title: title,
       content: content
     };
   
+    await notesService.add(newNote);
+
     setNotes([...notes, newNote]);
 
     setTitle("");
     setContent("");
   }
 
-  const handleUpdateNote = ( e: React.FormEvent) => {
+  const handleUpdateNote = async ( e: React.FormEvent) => {
     e.preventDefault();
 
     if (!selectedNote) {
@@ -70,6 +57,7 @@ function App() {
       content: content
     };
 
+    await notesService.update(updatedNote);
     setNotes(notes.map(note => note.id === selectedNote.id ? updatedNote : note));
 
     setSelectedNote(null);
@@ -83,8 +71,9 @@ function App() {
     setContent("");
   }
 
-  const handleDeleteNote = (e: React.MouseEvent, id: number) => {
+  const handleDeleteNote = async (e: React.MouseEvent, id: number) => {
     e.stopPropagation();
+    await notesService.delete(id);
     setNotes(notes.filter(note => note.id !== id));
   }
 
@@ -105,12 +94,12 @@ function App() {
       </form>
       <div className='notes-grid'>
         {notes.map(note => (
-           <div className='note-item' onClick={() => handleNoteClick(note) }>
-           <div className='note-header'>
-             <button onClick={e => handleDeleteNote(e, note.id)}>x</button>
-           </div>
-           <h2>{note.title}</h2>
-           <p>{note.content}</p>
+           <div key={note.id} className='note-item' onClick={() => handleNoteClick(note) }>
+            <div className='note-header'>
+              <button onClick={e => handleDeleteNote(e, note.id)}>x</button>
+            </div>
+            <h2>{note.title}</h2>
+            <p>{note.content}</p>
          </div>
         ))}       
       </div>
