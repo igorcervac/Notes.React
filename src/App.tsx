@@ -70,7 +70,7 @@ function App() {
       content: content
     };
 
-    setNotes(notes.map(note => note.id == selectedNote.id ? updatedNote : note));
+    setNotes(notes.map(note => note.id === selectedNote.id ? updatedNote : note));
 
     setSelectedNote(null);
     setTitle("");
@@ -81,6 +81,11 @@ function App() {
     setSelectedNote(null);
     setTitle("");
     setContent("");
+  }
+
+  const handleDeleteNote = (e: React.MouseEvent, id: number) => {
+    e.stopPropagation();
+    setNotes(notes.filter(note => note.id !== id));
   }
 
   return (
@@ -102,7 +107,7 @@ function App() {
         {notes.map(note => (
            <div className='note-item' onClick={() => handleNoteClick(note) }>
            <div className='note-header'>
-             <button>x</button>
+             <button onClick={e => handleDeleteNote(e, note.id)}>x</button>
            </div>
            <h2>{note.title}</h2>
            <p>{note.content}</p>
