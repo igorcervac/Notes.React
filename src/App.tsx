@@ -31,14 +31,15 @@ function App() {
     e.preventDefault();
 
     const newNote: Note = {
-      id: notes.length + 1,
+      id: 0,
       title: title,
       content: content
     };
   
-    await notesService.add(newNote);
+    const addedNote = await notesService.add(newNote);
+    console.log(addedNote);
 
-    setNotes([...notes, newNote]);
+    setNotes([...notes, addedNote]);
 
     setTitle("");
     setContent("");
