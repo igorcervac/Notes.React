@@ -14,12 +14,13 @@ class ApiNotesService implements INotesService {
         return notes;
     }
 
-    async add(note: Note): Promise<void> {
-        await fetch(this.apiUrl, {
+    async add(note: Note): Promise<Note> {
+        const response = await fetch(this.apiUrl, {
             method: 'POST', 
             headers: { "content-type": "application/json" },
             body: JSON.stringify(note)
-        });        
+        });  
+        return await response.json();      
     }
     
     async update(note: Note): Promise<void>{
