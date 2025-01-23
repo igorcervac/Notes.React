@@ -38,5 +38,5 @@ class ApiNotesService implements INotesService {
     }
 }
 
-const notesService: INotesService = new ApiNotesService("https://localhost:7102/api/notes");
+const notesService: INotesService = new ApiNotesService("https://notes-api-100.azurewebsites.net/api/notes");
 export default notesService;
