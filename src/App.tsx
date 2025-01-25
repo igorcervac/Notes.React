@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import './App.css';
 import { useState } from 'react';
 import Note from './Note';
-import notesService from './services/api.notes.service';
+import NotesContext from './NotesContext';
 
 function App() {
   const [notes, setNotes] = useState<Note[]>([]);
@@ -10,6 +10,8 @@ function App() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [selectedNote, setSelectedNote] = useState<Note | null>();
+
+  const notesService = useContext(NotesContext)!;
 
   useEffect(() => {
 
@@ -19,7 +21,7 @@ function App() {
     }
 
     getNotesAsync();
-  })
+  }, [])
 
   const handleNoteClick = (note : Note) => {
     setSelectedNote(note);
