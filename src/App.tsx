@@ -21,7 +21,7 @@ function App() {
     }
 
     getNotesAsync();
-  }, [])
+  })
 
   const handleNoteClick = (note : Note) => {
     setSelectedNote(note);
