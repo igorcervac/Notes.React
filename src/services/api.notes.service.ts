@@ -9,7 +9,11 @@ class ApiNotesService implements INotesService {
     }
 
     async getAll():Promise<Note[]> {
-        const response = await fetch(this.apiUrl);
+        const response = await fetch(this.apiUrl, {
+            headers: {
+                "Access-Control-Allow-Origin": "*"
+            }
+        });
         const notes = await response.json();
         return notes;
     }
@@ -17,7 +21,9 @@ class ApiNotesService implements INotesService {
     async add(note: Note): Promise<Note> {
         const response = await fetch(this.apiUrl, {
             method: 'POST', 
-            headers: { "content-type": "application/json" },
+            headers: { 
+                "Access-Control-Allow-Origin": "*",
+                "content-type": "application/json" },
             body: JSON.stringify(note)
         });  
         return await response.json();      
@@ -26,17 +32,25 @@ class ApiNotesService implements INotesService {
     async update(note: Note): Promise<void>{
         await fetch(`${this.apiUrl}/${note.id}`, {
             method: 'PUT', 
-            headers: { "content-type": "application/json" },
+            headers: { 
+                "Access-Control-Allow-Origin": "*",
+                "content-type": "application/json" },
             body: JSON.stringify(note)
         });
     }
 
     async delete(id: number): Promise<void>{
         await fetch(`${this.apiUrl}/${id}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                "Access-Control-Allow-Origin": "*"
+            }
         });
     }
 }
 
-const notesService: INotesService = new ApiNotesService("https://notes-api-100.azurewebsites.net/api/notes");
+// const apiUrl: string = "https://localhost:7102";
+const apiUrl: string = "https://notes-api-100.azurewebsites.net";
+
+const notesService: INotesService = new ApiNotesService(apiUrl+"/api/notes");
 export default notesService;
