@@ -1,7 +1,7 @@
 import Note from "../Note";
 import INotesService from "./notes.service";
 
-class ApiNotesService implements INotesService {
+export default class ApiNotesService implements INotesService {
     apiUrl: string = "";
    
     constructor(apiUrl: string) {
@@ -48,9 +48,3 @@ class ApiNotesService implements INotesService {
         });
     }
 }
-
-// const apiUrl: string = "https://localhost:7102";
-const apiUrl: string = "https://notes-api-100.azurewebsites.net";
-
-const notesService: INotesService = new ApiNotesService(apiUrl+"/api/notes");
-export default notesService;
