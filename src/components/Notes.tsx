@@ -2,25 +2,28 @@ import React, { useContext, useEffect } from 'react';
 import { useState } from 'react';
 import Note from '../Note';
 import NotesContext from '../NotesContext';
+import useNotes from '../hooks/useNotes';
 
-const Notes = () => {
-    const [notes, setNotes] = useState<Note[]>([]);
-  
+const Notes = () => {   
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [selectedNote, setSelectedNote] = useState<Note | null>();
+  const [selectedNote, setSelectedNote] = useState<Note | null>();  
 
+  const {notes, setNotes, loading} = useNotes();
+
+  // const [notes, setNotes] = useState<Note[]>([]);  
+
+  // useEffect(() => {
+
+  //   const getNotesAsync = async () => {
+  //     const notes = await notesService.getAll();
+  //     setNotes(notes);
+  //   }
+
+  //   getNotesAsync();
+  // });
+  
   const notesService = useContext(NotesContext)!;
-
-  useEffect(() => {
-
-    const getNotesAsync = async () => {
-      const notes = await notesService.getAll();
-      setNotes(notes);
-    }
-
-    getNotesAsync();
-  })
 
   const handleNoteClick = (note : Note) => {
     setSelectedNote(note);
@@ -77,33 +80,58 @@ const Notes = () => {
     e.stopPropagation();
     await notesService.delete(id);
     setNotes(notes.filter(note => note.id !== id));
-  }
-    return (<div className='container'>
-        <form className='note-form' onSubmit={e => selectedNote ? handleUpdateNote(e) : handleAddNote(e)}>
-          <input type='text' required placeholder='Title' onChange={e => setTitle(e.target.value)} value={title}></input>
-          <textarea placeholder='Content' required rows={3} onChange={e => setContent(e.target.value)} value={content}></textarea>
-          {!selectedNote ? 
-            (<button type='submit'>Add note</button>)
-            : 
-            (
-            <div className='edit-buttons'>
-              <button type='submit'>Save</button>
-              <button type='button' onClick={() => handleCancel()}>Cancel</button>
-            </div>
-          )}        
-        </form>
-        <div className='notes-grid'>
-          {notes.map(note => (
-            <div key={note.id} className='note-item' onClick={() => handleNoteClick(note) }>
-              <div className='note-header'>
-                <button onClick={e => handleDeleteNote(e, note.id)}>x</button>
-              </div>
-              <h2>{note.title}</h2>
-              <p>{note.content}</p>
+  } 
+
+  // if (loading) {
+  //   return (<div>
+  //     Loading...
+  //   </div>)
+  // }
+  
+  return (
+    <div className='container'>
+      
+      <form className='note-form' onSubmit={e => selectedNote ? handleUpdateNote(e) : handleAddNote(e)}>
+        <input type='text' required placeholder='Title' onChange={e => setTitle(e.target.value)} value={title}></input>
+        <textarea placeholder='Content' required rows={3} onChange={e => setContent(e.target.value)} value={content}></textarea>
+        {!selectedNote ? 
+          (<button type='submit'>Add note</button>)
+          : 
+          (
+          <div className='edit-buttons'>
+            <button type='submit'>Save</button>
+            <button type='button' onClick={() => handleCancel()}>Cancel</button>
           </div>
-          ))}       
-        </div>
-      </div>);
+        )}        
+      </form>
+
+      {loading && (<div className='loading'>
+            Loading...
+          </div>)
+      }
+      
+      {/* {error && (<div>
+            {error}
+          </div>)
+      } */}
+
+      {!loading && (<div className='notes-grid'>
+              {
+                notes.map(note => (
+                  <div key={note.id} className='note-item' onClick={() => handleNoteClick(note) }>
+                    <div className='note-header'>
+                      <button onClick={e => handleDeleteNote(e, note.id)}>x</button>
+                    </div>
+                    <h2>{note.title}</h2>
+                    <p>{note.content}</p>
+                  </div>
+                  ))
+              }
+      </div>)
+}      
+           
+    </div>
+    );
 }
 
 export default Notes;
