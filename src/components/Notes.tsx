@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { useState } from 'react';
 import Note from '../Note';
 import NotesContext from '../NotesContext';
@@ -10,18 +10,6 @@ const Notes = () => {
   const [selectedNote, setSelectedNote] = useState<Note | null>();  
 
   const {notes, setNotes, loading} = useNotes();
-
-  // const [notes, setNotes] = useState<Note[]>([]);  
-
-  // useEffect(() => {
-
-  //   const getNotesAsync = async () => {
-  //     const notes = await notesService.getAll();
-  //     setNotes(notes);
-  //   }
-
-  //   getNotesAsync();
-  // });
   
   const notesService = useContext(NotesContext)!;
 
@@ -80,14 +68,8 @@ const Notes = () => {
     e.stopPropagation();
     await notesService.delete(id);
     setNotes(notes.filter(note => note.id !== id));
-  } 
+  }
 
-  // if (loading) {
-  //   return (<div>
-  //     Loading...
-  //   </div>)
-  // }
-  
   return (
     <div className='container'>
       
@@ -108,13 +90,8 @@ const Notes = () => {
       {loading && (<div className='loading'>
             Loading...
           </div>)
-      }
-      
-      {/* {error && (<div>
-            {error}
-          </div>)
-      } */}
-
+      }      
+     
       {!loading && (<div className='notes-grid'>
               {
                 notes.map(note => (
