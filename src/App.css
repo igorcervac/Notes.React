@@ -148,3 +148,7 @@ main {
   text-align: justify;
 }
 
+.loading {
+  justify-self: center;
+}
+

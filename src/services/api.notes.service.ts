@@ -15,6 +15,7 @@ export default class ApiNotesService implements INotesService {
             }
         });
         const notes = await response.json();
+
         return notes;
     }
 
