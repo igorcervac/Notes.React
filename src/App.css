@@ -107,6 +107,8 @@ header {
 
 header h1 {
   grid-column: span 6;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
 }
 
 header nav {
